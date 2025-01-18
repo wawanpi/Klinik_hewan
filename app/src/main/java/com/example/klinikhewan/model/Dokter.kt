@@ -17,3 +17,17 @@ data class Dokter(
     @SerialName("kontak")
     val kontak : String
 )
+
+@Serializable
+data class AllDokterResponse(
+    val status: Boolean,
+    val message: String,
+    val data : List<Dokter>
+)
+
+@Serializable
+data class DokterDetailResponse(
+    val status: Boolean,
+    val message: String,
+    val data : Dokter
+)
