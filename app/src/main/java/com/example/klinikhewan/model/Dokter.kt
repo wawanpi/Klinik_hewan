@@ -11,8 +11,8 @@ data class Dokter(
     @SerialName("nama_dokter")
     val nama_dokter : String,
 
-    @SerialName("spesialis")
-    val spesialis : String,
+    @SerialName("spesialisasi")
+    val spesialisasi : String,
 
     @SerialName("kontak")
     val kontak : String
