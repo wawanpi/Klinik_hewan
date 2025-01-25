@@ -29,10 +29,11 @@ object PenyediaViewModel {
         }
 
         initializer {
-            InsertPsnViewModel(aplikasiKlinik().container.pasienRepository)
+            InsertPsnViewModel(aplikasiKlinik().container.pasienRepository,aplikasiKlinik().container.jenisHewanRepository)
         }
+
         initializer { DetailPsnViewModel(createSavedStateHandle(),aplikasiKlinik().container.pasienRepository) }
-        initializer { UpdatePsnViewModel(createSavedStateHandle(),aplikasiKlinik().container.pasienRepository) }
+        initializer { UpdatePsnViewModel(createSavedStateHandle(),aplikasiKlinik().container.pasienRepository,aplikasiKlinik().container.jenisHewanRepository) }
 
         //Dokter
         initializer {
