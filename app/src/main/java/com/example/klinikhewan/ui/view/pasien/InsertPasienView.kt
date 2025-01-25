@@ -31,6 +31,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import com.example.klinikhewan.model.JenisHewan
 
 // Navigasi tujuan buat layar ini
 object DestinasiEntryPsn : DestinasiNavigasi {
@@ -89,7 +90,7 @@ fun EntryBodyPsn(
     insertPsnUiState: InsertPsnUiState,
     onPasienValueChange: (InsertPsnUiEvent) -> Unit,
     onSaveClick: () -> Unit,
-    jenisHewanList: List<com.example.klinikhewan.model.JenisHewan>, // Daftar jenis hewan untuk dropdown
+    jenisHewanList: List<JenisHewan>, // Daftar jenis hewan untuk dropdown
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -118,7 +119,7 @@ fun FormInputPsn(
     insertPsnUiEvent: InsertPsnUiEvent,
     modifier: Modifier = Modifier,
     onValueChange: (InsertPsnUiEvent) -> Unit = {},
-    jenisHewanList: List<com.example.klinikhewan.model.JenisHewan>, // Jenis hewan untuk dropdown
+    jenisHewanList: List<JenisHewan>, // Jenis hewan untuk dropdown
     enabled: Boolean = true
 ) {
     Column(
