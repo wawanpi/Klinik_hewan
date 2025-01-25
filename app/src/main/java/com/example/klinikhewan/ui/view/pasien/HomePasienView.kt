@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.klinikhewan.R
+import com.example.klinikhewan.ui.costumwidget.BottomBar
 import com.example.klinikhewan.ui.viewmodel.PenyediaViewModel
 import com.example.klinikhewan.ui.viewmodel.pasien.HomePsnUiState
 import com.example.klinikhewan.ui.viewmodel.pasien.HomePsnViewModel
@@ -64,6 +65,9 @@ object DestinasiHomePsn: DestinasiNavigasi {
 @Composable
 fun HomePsnScreen(
     navigateToItemEntry: () -> Unit, // Callback untuk navigasi ke halaman tambah mahasiswa
+    navigateToHomeDokter: () -> Unit,
+    navigateToHomeJenisHewan: () -> Unit,
+    navigateToHomePerawatan: () -> Unit,
     modifier: Modifier = Modifier, // Modifier untuk mengatur layout composable
     onDetailClick: (String) -> Unit = {}, // Callback untuk navigasi ke detail mahasiswa berdasarkan NIM
     viewModel: HomePsnViewModel = viewModel(factory = PenyediaViewModel.Factory) // ViewModel untuk memuat data mahasiswa
@@ -96,6 +100,14 @@ fun HomePsnScreen(
                 )
             }
         },
+        bottomBar = {
+            BottomBar(
+                onHomeDokterClick = navigateToHomeDokter,
+                onHomeJenisHewanClick = navigateToHomeJenisHewan,
+                onHomePerawatanClick = navigateToHomePerawatan)
+        }
+
+
     ) { innerPadding ->
         // Konten utama layar (bagian `Body`) yang menampilkan daftar mahasiswa atau status lain
         HomePsnStatus(
