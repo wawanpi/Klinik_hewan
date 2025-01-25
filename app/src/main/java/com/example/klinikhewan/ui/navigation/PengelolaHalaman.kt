@@ -1,4 +1,4 @@
-package com.example.pertemuan12.ui.navigation
+package com.example.klinikhewan.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.klinikhewan.ui.view.dokter.DestinasiDtrDetailDtr
+import com.example.klinikhewan.ui.view.dokter.DestinasiEntryDtr
 import com.example.klinikhewan.ui.view.dokter.DestinasiHomeDtr
 import com.example.klinikhewan.ui.view.dokter.DestinasiUpdateDtr
 import com.example.klinikhewan.ui.view.dokter.DestinasiUpdateDtr.UpdateDtrView
@@ -29,108 +30,87 @@ import com.example.klinikhewan.ui.view.pasien.DetailPsnView
 import com.example.klinikhewan.ui.view.pasien.EntryPsnScreen
 import com.example.klinikhewan.ui.view.pasien.HomePsnScreen
 import com.example.klinikhewan.ui.view.pasien.UpdatePsnView
-import com.example.klinikhewan.ui.viewmodel.dokter.DestinasiEntryDtr
+import com.example.klinikhewan.ui.view.perawatan.DestinasiEntryPrn
+import com.example.klinikhewan.ui.view.perawatan.DestinasiHomePrn
+import com.example.klinikhewan.ui.view.perawatan.DestinasiPrnDetailPrn
+import com.example.klinikhewan.ui.view.perawatan.DestinasiUpdatePrn
+import com.example.klinikhewan.ui.view.perawatan.DetailPrnView
+import com.example.klinikhewan.ui.view.perawatan.EntryPrnScreen
+import com.example.klinikhewan.ui.view.perawatan.HomePrnScreen
+import com.example.klinikhewan.ui.view.perawatan.UpdatePrnView
 
-
-//@Composable
-//fun PengelolaHalaman(
-//    modifier: Modifier = Modifier,
-//    navController: NavHostController = rememberNavController() // Objek controller buat navigasi
-//
-//) {
-//    NavHost(
-//        navController = navController,
-//        startDestination = DestinasiHomePsn.route, // Start screen (Home)
-//        modifier = Modifier
-//    ) {
-//        // **Destinasi Home**: layar utama aplikasi
-//        composable(DestinasiHomePsn.route) {
-//            HomePsnScreen(
-//                navigateToItemEntry = { navController.navigate(DestinasiEntryPsn.route) },
-//                onDetailClick = { id_hewan ->
-//                    // Navigasi ke destinasi Detail dengan menyertakan id_hewan
-//                    navController.navigate("${DestinasiPsnDetailPsn.route}/$id_hewan") {
-//                        // Menggunakan popUpTo untuk memastikan navigasi ke Detail dan menghapus stack sebelumnya jika perlu
-//                        popUpTo(DestinasiHomePsn.route) {
-//                            inclusive = true  // Termasuk juga destinasi yang akan dipopUp
-//                        }
-//                    }
-//                    println("PengelolaHalaman: id_hewan = $id_hewan")
-//                }
-//            )
-//        }
-//
-//        // **Destinasi Entry**: form mahasiswa baru
-//        composable(DestinasiEntryPsn.route) {
-//            EntryPsnScreen(
-//                navigateBack = {
-//                    navController.navigate(DestinasiHomePsn.route) { // Navigasi balik ke Home
-//                        popUpTo(DestinasiHomePsn.route) {
-//                            inclusive = true // Menghapus stack untuk menghindari double back
-//                        }
-//                    }
-//                }
-//            )
-//        }
-//
-//        // **Destinasi Detail**: Layar Detail Pasien berdasarkan id_hewan
-//        composable(DestinasiPsnDetailPsn.routesWithArg) { backStackEntry ->
-//            // Mendapatkan id_hewan dari argument route
-//            val id_hewan = backStackEntry.arguments?.getString(DestinasiPsnDetailPsn.ID_HEWAN)
-//
-//            id_hewan?.let {
-//                // Pastikan ini adalah composable yang benar dan sesuai untuk DetailPsnViewModel
-//                DetailPsnView(
-//                    id_hewan = it, // Mengirimkan id_hewan ke DetailPsnViewModel
-//                    navigateBack = {
-//                        // Aksi ketika tombol "Kembali" ditekan
-//                        navController.navigate(DestinasiHomePsn.route) {
-//                            popUpTo(DestinasiHomePsn.route) {
-//                                inclusive = true // Pop sampai ke DestinasiHome
-//                            }
-//                        }
-//                    },
-//                    onEditClick = {
-//                        // Navigasi ke halaman update dengan id_hewan sebagai argumen
-//                        navController.navigate("${DestinasiUpdatePsn.route}/$it")
-//                    }
-//                )
-//            }
-//        }
-//
-//        // **Destinasi Update**: Layar untuk update data Pasien
-//        composable(DestinasiUpdatePsn.routesWithArg) { backStackEntry ->
-//            // Mendapatkan id_hewan dari argument route
-//            val id_hewan = backStackEntry.arguments?.getString(DestinasiUpdatePsn.ID_HEWAN)
-//
-//            id_hewan?.let {
-//                // Pastikan untuk navigasi ke halaman update Pasien dengan id_hewan
-//                UpdatePsnView(
-//                    id_hewan = it, // Kirim id_hewan untuk diproses di layar update
-//                    navigateBack = {
-//                        navController.popBackStack() // Kembali ke layar sebelumnya
-//                    }
-//                )
-//            }
-//        }
-//    }
-//}
 @Composable
 fun PengelolaHalaman(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController() // Objek controller untuk navigasi
+    navController: NavHostController = rememberNavController() // Objek controller buat navigasi
 ) {
     NavHost(
         navController = navController,
-        startDestination = DestinasiHomeDtr.route, // Destinasi awal, sesuai dengan kode pertama
+        startDestination = DestinasiHomePsn.route, // Start screen (Home Pasien)
         modifier = modifier
     ) {
-        // **Destinasi Home**: layar utama aplikasi
+        // **Destinasi Home Pasien**: layar utama aplikasi untuk pasien
+        composable(DestinasiHomePsn.route) {
+            HomePsnScreen(
+                navigateToItemEntry = { navController.navigate(DestinasiEntryPsn.route) },
+                navigateToHomeDokter = { navController.navigate(DestinasiHomeDtr.route) },
+                navigateToHomeJenisHewan = { navController.navigate(DestinasiHomeJh.route) },
+                navigateToHomePerawatan = { navController.navigate(DestinasiHomePrn.route) },
+                onDetailClick = { id_hewan ->
+                    navController.navigate("${DestinasiPsnDetailPsn.route}/$id_hewan") {
+                        popUpTo(DestinasiHomePsn.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
+
+        // **Destinasi Entry Pasien**: form untuk menambah data pasien
+        composable(DestinasiEntryPsn.route) {
+            EntryPsnScreen(
+                navigateBack = {
+                    navController.navigate(DestinasiHomePsn.route) {
+                        popUpTo(DestinasiHomePsn.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // **Destinasi Detail Pasien**: layar Detail Pasien berdasarkan id_hewan
+        composable(DestinasiPsnDetailPsn.routesWithArg) { backStackEntry ->
+            val id_hewan = backStackEntry.arguments?.getString(DestinasiPsnDetailPsn.ID_HEWAN)
+            id_hewan?.let {
+                DetailPsnView(
+                    id_hewan = it,
+                    navigateBack = {
+                        navController.navigate(DestinasiHomePsn.route) {
+                            popUpTo(DestinasiHomePsn.route) { inclusive = true }
+                        }
+                    },
+                    onEditClick = {
+                        navController.navigate("${DestinasiUpdatePsn.route}/$it")
+                    }
+                )
+            }
+        }
+
+        // **Destinasi Update Pasien**: layar untuk update data pasien
+        composable(DestinasiUpdatePsn.routesWithArg) { backStackEntry ->
+            val id_hewan = backStackEntry.arguments?.getString(DestinasiUpdatePsn.ID_HEWAN)
+            id_hewan?.let {
+                UpdatePsnView(
+                    id_hewan = it,
+                    navigateBack = { navController.popBackStack() }
+                )
+            }
+        }
+
+        // **Destinasi Home Dokter**: layar utama aplikasi untuk dokter
         composable(DestinasiHomeDtr.route) {
             HomeDtrScreen(
                 navigateToItemEntry = { navController.navigate(DestinasiEntryDtr.route) },
                 onDetailClick = { id_dokter ->
-                    // Navigasi ke Destinasi Detail dengan menyertakan id_dokter
                     navController.navigate("${DestinasiDtrDetailDtr.route}/$id_dokter") {
                         popUpTo(DestinasiHomeDtr.route) { inclusive = true }
                     }
@@ -138,7 +118,7 @@ fun PengelolaHalaman(
             )
         }
 
-        // **Destinasi Entry**: layar untuk menambahkan data
+        // **Destinasi Entry Dokter**: form untuk menambah data dokter
         composable(DestinasiEntryDtr.route) {
             EntryDtrScreen(
                 navigateBack = {
@@ -149,13 +129,12 @@ fun PengelolaHalaman(
             )
         }
 
-        // **Destinasi Detail**: layar detail untuk dokter berdasarkan id_dokter
+        // **Destinasi Detail Dokter**: layar Detail Dokter berdasarkan id_dokter
         composable(DestinasiDtrDetailDtr.routesWithArg) { backStackEntry ->
             val id_dokter = backStackEntry.arguments?.getString(DestinasiDtrDetailDtr.ID_DOKTER)
-
             id_dokter?.let {
                 DetailDtrView(
-                    id_dokter = it, // Mengirim id_dokter untuk detail
+                    id_dokter = it,
                     navigateBack = {
                         navController.navigate(DestinasiHomeDtr.route) {
                             popUpTo(DestinasiHomeDtr.route) { inclusive = true }
@@ -168,10 +147,9 @@ fun PengelolaHalaman(
             }
         }
 
-        // **Destinasi Update**: layar untuk update data dokter
+        // **Destinasi Update Dokter**: layar untuk update data dokter
         composable(DestinasiUpdateDtr.routesWithArg) { backStackEntry ->
             val id_dokter = backStackEntry.arguments?.getString(DestinasiUpdateDtr.ID_DOKTER)
-
             id_dokter?.let {
                 UpdateDtrView(
                     id_dokter = it,
@@ -179,90 +157,109 @@ fun PengelolaHalaman(
                 )
             }
         }
+
+        // **Destinasi Home Jenis Hewan**: layar utama aplikasi untuk jenis hewan
+        composable(DestinasiHomeJh.route) {
+            HomeJhScreen(
+                navigateToItemEntry = { navController.navigate(DestinasiEntryJh.route) },
+                onDetailClick = { id_jenis_hewan ->
+                    navController.navigate("${DestinasiJhDetailJh.route}/$id_jenis_hewan") {
+                        popUpTo(DestinasiHomeJh.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // **Destinasi Entry Jenis Hewan**: form untuk menambah data jenis hewan
+        composable(DestinasiEntryJh.route) {
+            EntryJhScreen(
+                navigateBack = {
+                    navController.navigate(DestinasiHomeJh.route) {
+                        popUpTo(DestinasiHomeJh.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // **Destinasi Detail Jenis Hewan**: layar Detail Jenis Hewan berdasarkan id_jenis_hewan
+        composable(DestinasiJhDetailJh.routesWithArg) { backStackEntry ->
+            val id_jenis_hewan = backStackEntry.arguments?.getString(DestinasiJhDetailJh.ID_JENSI_HEWAN)
+            id_jenis_hewan?.let {
+                DetailJhView(
+                    id_jenis_hewan = it,
+                    navigateBack = {
+                        navController.navigate(DestinasiHomeJh.route) {
+                            popUpTo(DestinasiHomeJh.route) { inclusive = true }
+                        }
+                    },
+                    onEditClick = {
+                        navController.navigate("${DestinasiUpdateJh.route}/$it")
+                    }
+                )
+            }
+        }
+
+        // **Destinasi Update Jenis Hewan**: layar untuk update data jenis hewan
+        composable(DestinasiUpdateJh.routesWithArg) { backStackEntry ->
+            val id_jenis_hewan = backStackEntry.arguments?.getString(DestinasiUpdateJh.ID_JENSI_HEWAN)
+            id_jenis_hewan?.let {
+                UpdateJhView(
+                    id_jenis_hewan = it,
+                    navigateBack = { navController.popBackStack() }
+                )
+            }
+        }
+
+        // **Destinasi Home Perawatan**: layar utama aplikasi untuk perawatan
+        composable(DestinasiHomePrn.route) {
+            HomePrnScreen(
+                navigateToItemEntry = { navController.navigate(DestinasiEntryPrn.route) },
+                onDetailClick = { id_perawatan ->
+                    navController.navigate("${DestinasiPrnDetailPrn.route}/$id_perawatan") {
+                        popUpTo(DestinasiHomePrn.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // **Destinasi Entry Perawatan**: form untuk menambah data perawatan
+        composable(DestinasiEntryPrn.route) {
+            EntryPrnScreen(
+                navigateBack = {
+                    navController.navigate(DestinasiHomePrn.route) {
+                        popUpTo(DestinasiHomePrn.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // **Destinasi Detail Perawatan**: layar Detail Perawatan berdasarkan id_perawatan
+        composable(DestinasiPrnDetailPrn.routesWithArg) { backStackEntry ->
+            val id_perawatan = backStackEntry.arguments?.getString(DestinasiPrnDetailPrn.ID_PERAWATAN)
+            id_perawatan?.let {
+                DetailPrnView(
+                    id_perawatan = it,
+                    navigateBack = {
+                        navController.navigate(DestinasiHomePrn.route) {
+                            popUpTo(DestinasiHomePrn.route) { inclusive = true }
+                        }
+                    },
+                    onEditClick = {
+                        navController.navigate("${DestinasiUpdatePrn.route}/$it")
+                    }
+                )
+            }
+        }
+
+        // **Destinasi Update Perawatan**: layar untuk update data perawatan
+        composable(DestinasiUpdatePrn.routesWithArg) { backStackEntry ->
+            val id_perawatan = backStackEntry.arguments?.getString(DestinasiUpdatePrn.ID_PERWATAN)
+            id_perawatan?.let {
+                UpdatePrnView(
+                    id_perwatan = it,
+                    navigateBack = { navController.popBackStack() }
+                )
+            }
+        }
     }
 }
-
-//@Composable
-//fun PengelolaHalaman(
-//    modifier: Modifier = Modifier,
-//    navController: NavHostController = rememberNavController() // Objek controller buat navigasi
-//
-//) {
-//    NavHost(
-//        navController = navController,
-//        startDestination = DestinasiHomeJh.route, // Start screen (Home)
-//        modifier = Modifier
-//    ) {
-//        // **Destinasi Home**: layar utama aplikasi
-//        composable(DestinasiHomeJh.route) {
-//            HomeJhScreen(
-//                navigateToItemEntry = { navController.navigate(DestinasiEntryJh.route) },
-//                onDetailClick = { id_jenis_hewan ->
-//                    // Navigasi ke destinasi Detail dengan menyertakan id_hewan
-//                    navController.navigate("${DestinasiJhDetailJh.route}/$id_jenis_hewan") {
-//                        // Menggunakan popUpTo untuk memastikan navigasi ke Detail dan menghapus stack sebelumnya jika perlu
-//                        popUpTo(DestinasiHomeJh.route) {
-//                            inclusive = true  // Termasuk juga destinasi yang akan dipopUp
-//                        }
-//                    }
-//                    println("PengelolaHalaman: id_hewan = $id_jenis_hewan")
-//                }
-//            )
-//        }
-//
-//        // **Destinasi Entry**: form mahasiswa baru
-//        composable(DestinasiEntryJh.route) {
-//            EntryJhScreen(
-//                navigateBack = {
-//                    navController.navigate(DestinasiHomeJh.route) { // Navigasi balik ke Home
-//                        popUpTo(DestinasiHomeJh.route) {
-//                            inclusive = true // Menghapus stack untuk menghindari double back
-//                        }
-//                    }
-//                }
-//            )
-//        }
-//
-//        // **Destinasi Detail**: Layar Detail Pasien berdasarkan id_hewan
-//        composable(DestinasiJhDetailJh.routesWithArg) { backStackEntry ->
-//            // Mendapatkan id_hewan dari argument route
-//            val id_hewan = backStackEntry.arguments?.getString(DestinasiJhDetailJh.ID_JENSI_HEWAN)
-//
-//            id_hewan?.let {
-//                // Pastikan ini adalah composable yang benar dan sesuai untuk DetailPsnViewModel
-//                DetailJhView (
-//                    id_jenis_hewan = it, // Mengirimkan id_hewan ke DetailPsnViewModel
-//                    navigateBack = {
-//                        // Aksi ketika tombol "Kembali" ditekan
-//                        navController.navigate(DestinasiHomeJh.route) {
-//                            popUpTo(DestinasiHomeJh.route) {
-//                                inclusive = true // Pop sampai ke DestinasiHome
-//                            }
-//                        }
-//                    },
-//                    onEditClick = {
-//                        // Navigasi ke halaman update dengan id_hewan sebagai argumen
-//                        navController.navigate("${DestinasiUpdateJh.route}/$it")
-//                    }
-//                )
-//            }
-//        }
-//
-//        // **Destinasi Update**: Layar untuk update data Pasien
-//        composable(DestinasiUpdateJh.routesWithArg) { backStackEntry ->
-//            // Mendapatkan id_hewan dari argument route
-//            val id_hewan = backStackEntry.arguments?.getString(DestinasiUpdateJh.ID_JENSI_HEWAN)
-//
-//            id_hewan?.let {
-//                // Pastikan untuk navigasi ke halaman update Pasien dengan id_hewan
-//                UpdateJhView(
-//                    id_jenis_hewan = it, // Kirim id_hewan untuk diproses di layar update
-//                    navigateBack = {
-//                        navController.popBackStack() // Kembali ke layar sebelumnya
-//                    }
-//                )
-//            }
-//        }
-//    }
-//}
-
