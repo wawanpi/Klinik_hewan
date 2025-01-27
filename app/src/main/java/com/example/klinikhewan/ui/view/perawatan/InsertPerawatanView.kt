@@ -1,28 +1,16 @@
 package com.example.klinikhewan.ui.view.perawatan
 
 import Pasien
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import android.widget.DatePicker
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.klinikhewan.model.Dokter
@@ -33,9 +21,12 @@ import com.example.klinikhewan.ui.viewmodel.perawatan.InsertPrnViewModel
 import com.example.pertemuan12.ui.costumwidget.CostumeTopAppBar
 import com.example.pertemuan12.ui.navigation.DestinasiNavigasi
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 object DestinasiEntryPrn : DestinasiNavigasi {
-    override val route = "item_entry"
+    override val route = "item_entry perawatan"
     override val titleRes = "Entry Perawatan"
 }
 
@@ -49,7 +40,7 @@ fun EntryPrnScreen(
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    remember {
+    LaunchedEffect(Unit) {
         coroutineScope.launch {
             viewModel.getPsndanDtr()
         }
@@ -132,9 +123,35 @@ fun FormInputPrn(
         // Dropdown untuk ID Hewan (Pasien)
         val expandedHewan = remember { mutableStateOf(false) }
         val selectedIdHewan = pasienList.find { it.id_hewan == insertPrnUiEvent.id_hewan }?.id_hewan ?: "Pilih ID Hewan"
+        // Variable to control DatePicker
+        val context = LocalContext.current
+        val calendar = Calendar.getInstance()
+        val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val openDatePicker = remember { mutableStateOf(false) }
+        val dateState = remember { mutableStateOf(insertPrnUiEvent.tanggal_perawatan) }
+
+        // Launch DatePickerDialog when openDatePicker is true
+        if (openDatePicker.value) {
+            val datePickerDialog = android.app.DatePickerDialog(
+                context,
+                { _: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                    calendar.set(year, monthOfYear, dayOfMonth)
+                    val selectedDate = dateFormatter.format(calendar.time)
+                    onValueChange(insertPrnUiEvent.copy(tanggal_perawatan = selectedDate))
+                    dateState.value = selectedDate
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            )
+            LaunchedEffect(openDatePicker.value) {
+                datePickerDialog.show()
+                openDatePicker.value = false
+            }
+        }
+
 
         Column {
-
             OutlinedTextField(
                 value = insertPrnUiEvent.id_perawatan,
                 onValueChange = { onValueChange(insertPrnUiEvent.copy(id_perawatan = it)) },
@@ -144,13 +161,14 @@ fun FormInputPrn(
                 singleLine = true
             )
 
-
             Text(text = "Pilih ID Hewan", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 8.dp))
-            Button(onClick = { expandedHewan.value = true }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { expandedHewan.value = true },
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,) {
                 Text(text = selectedIdHewan)
             }
 
-            DropdownMenu(expanded = expandedHewan.value, onDismissRequest = { expandedHewan.value = false }, modifier = Modifier.fillMaxWidth()) {
+            DropdownMenu(expanded = expandedHewan.value, onDismissRequest = { expandedHewan.value = false }) {
                 pasienList.forEach { pasien ->
                     DropdownMenuItem(
                         onClick = {
@@ -169,11 +187,11 @@ fun FormInputPrn(
 
         Column {
             Text(text = "Pilih ID Dokter", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 8.dp))
-            Button(onClick = { expandedDokter.value = true }, modifier = Modifier.fillMaxWidth()) {
+            Button(onClick = { expandedDokter.value = true }, modifier = Modifier.fillMaxWidth(),shape = MaterialTheme.shapes.medium,) {
                 Text(text = selectedIdDokter)
             }
 
-            DropdownMenu(expanded = expandedDokter.value, onDismissRequest = { expandedDokter.value = false }, modifier = Modifier.fillMaxWidth()) {
+            DropdownMenu(expanded = expandedDokter.value, onDismissRequest = { expandedDokter.value = false }) {
                 dokterList.forEach { dokter ->
                     DropdownMenuItem(
                         onClick = {
@@ -195,13 +213,21 @@ fun FormInputPrn(
             singleLine = true
         )
 
+        // Tanggal Lahir sebagai DatePicker
         OutlinedTextField(
-            value = insertPrnUiEvent.tanggal_perawatan,
-            onValueChange = { onValueChange(insertPrnUiEvent.copy(tanggal_perawatan = it)) },
+            value = dateState.value,
+            onValueChange = { /* Tidak diubah karena kita menggunakan DatePicker */ },
             label = { Text("Tanggal Perawatan") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
-            singleLine = true
+            singleLine = true,
+            readOnly = true,
+            trailingIcon = {
+                Text(
+                    text = "📅", // Ikon kalender
+                    modifier = Modifier.clickable { openDatePicker.value = true }
+                )
+            }
         )
 
         Divider(thickness = 8.dp, modifier = Modifier.padding(12.dp))
