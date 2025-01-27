@@ -20,7 +20,7 @@ import com.example.pertemuan12.ui.navigation.DestinasiNavigasi
 import kotlinx.coroutines.launch
 
 object DestinasiUpdatePsn : DestinasiNavigasi {
-    override val route = "update"
+    override val route = "update pasien"
     const val ID_HEWAN = "id_hewan"
     val routesWithArg = "$route/{$ID_HEWAN}"
     override val titleRes = "Update Pasien"
@@ -37,7 +37,7 @@ fun UpdatePsnView(
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    val psnuiState = viewModel.PsnuiState.value
+    val psnuiState = viewModel.psnuiState.value
     val jenisHewanList = viewModel.jhlist // Ambil daftar jenis hewan dari ViewModel
 
     Scaffold(
@@ -60,7 +60,7 @@ fun UpdatePsnView(
             EntryBodyPsn(
                 insertPsnUiState = psnuiState,
                 jenisHewanList = jenisHewanList, // Kirim daftar jenis hewan ke EntryBodyPsn
-                onPasienValueChange = { updatedValue ->
+                onPasienValueChange = {   updatedValue ->
                     viewModel.updatePsnState(updatedValue)
                 },
                 onSaveClick = {

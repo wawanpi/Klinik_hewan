@@ -20,7 +20,7 @@ import com.example.pertemuan12.ui.navigation.DestinasiNavigasi
 import kotlinx.coroutines.launch
 
 object DestinasiUpdateDtr : DestinasiNavigasi {
-    override val route = "update"
+    override val route = "update dokter"
     const val ID_DOKTER = "id_dokter"
     val routesWithArg = "$route/{$ID_DOKTER}"
     override val titleRes = "Update Dokter"
