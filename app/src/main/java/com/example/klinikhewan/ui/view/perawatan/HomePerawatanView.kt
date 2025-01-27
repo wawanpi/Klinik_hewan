@@ -63,6 +63,7 @@ object DestinasiHomePrn: DestinasiNavigasi {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePrnScreen(
+    navigateBack: () -> Unit,
     navigateToItemEntry: () -> Unit, // Callback untuk navigasi ke halaman tambah mahasiswa
     modifier: Modifier = Modifier, // Modifier untuk mengatur layout composable
     onDetailClick: (String) -> Unit = {}, // Callback untuk navigasi ke detail mahasiswa berdasarkan NIM
@@ -76,7 +77,8 @@ fun HomePrnScreen(
         topBar = {
             CostumeTopAppBar(
                 title = DestinasiHomePrn.titleRes, // Menggunakan judul dari objek `DestinasiHome`
-                canNavigateBack = false, // Tidak memungkinkan kembali karena ini halaman utama
+                canNavigateBack = true, // Tidak memungkinkan kembali karena ini halaman utama
+                navigateUp = navigateBack,
                 scrollBehavior = scrollBehavior, // Menautkan scroll behavior ke TopAppBar
                 onRefreshClick = {
                     viewModel.getPrn() // Memuat ulang data mahasiswa ketika tombol refresh diklik

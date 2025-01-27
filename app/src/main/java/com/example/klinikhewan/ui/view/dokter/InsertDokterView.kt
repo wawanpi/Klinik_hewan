@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 
 // Navigasi tujuan buat layar ini
 object DestinasiEntryDtr : DestinasiNavigasi {
-    override val route = "item_entry" // Rute navigasi ke layar ini
+    override val route = "item_entry dokter" // Rute navigasi ke layar ini
     override val titleRes = "Entry Dokter" // Judul di TopAppBar
 }
 // Komponen utama layar Entry Mahasiswa

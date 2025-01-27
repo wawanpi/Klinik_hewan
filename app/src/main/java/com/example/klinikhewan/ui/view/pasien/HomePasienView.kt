@@ -57,7 +57,7 @@ import com.example.pertemuan12.ui.costumwidget.CostumeTopAppBar
 import com.example.pertemuan12.ui.navigation.DestinasiNavigasi
 
 object DestinasiHomePsn: DestinasiNavigasi {
-    override val route = "home"
+    override val route = "home pasien"
     override val titleRes = "Home Daftar Pasien"
 }
 

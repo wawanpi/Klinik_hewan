@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.klinikhewan.model.Perawatan
 import com.example.klinikhewan.repository.PerawatanRepository
 import com.example.klinikhewan.ui.view.perawatan.DestinasiPrnDetailPrn
-import com.example.klinikhewan.ui.viewmodel.perawatan.InsertPrnUiEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

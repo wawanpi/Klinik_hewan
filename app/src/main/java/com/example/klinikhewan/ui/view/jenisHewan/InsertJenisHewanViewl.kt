@@ -29,7 +29,7 @@ import com.example.pertemuan12.ui.navigation.DestinasiNavigasi
 import kotlinx.coroutines.launch
 
 object DestinasiEntryJh : DestinasiNavigasi {
-    override val route = "item_entry" // Rute navigasi ke layar ini
+    override val route = "item_entry jenis hewan" // Rute navigasi ke layar ini
     override val titleRes = "Entry Jenis Hewan" // Judul di TopAppBar
 }
 

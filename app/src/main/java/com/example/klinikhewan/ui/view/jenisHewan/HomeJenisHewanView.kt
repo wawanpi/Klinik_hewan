@@ -63,6 +63,7 @@ object DestinasiHomeJh: DestinasiNavigasi {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeJhScreen(
+    navigateBack: () -> Unit,
     navigateToItemEntry: () -> Unit, // Callback untuk navigasi ke halaman tambah jenis hewan
     modifier: Modifier = Modifier, // Modifier untuk mengatur layout composable
     onDetailClick: (String) -> Unit = {}, // Callback untuk navigasi ke detail jenis hewan berdasarkan ID
@@ -75,7 +76,8 @@ fun HomeJhScreen(
         topBar = {
             CostumeTopAppBar(
                 title = DestinasiHomeJh.titleRes, // Menggunakan judul dari objek `DestinasiHome`
-                canNavigateBack = false, // Tidak memungkinkan kembali karena ini halaman utama
+                canNavigateBack = true, // Tidak memungkinkan kembali karena ini halaman utama
+                navigateUp = navigateBack, // Aksi saat tombol back di klik
                 scrollBehavior = scrollBehavior, // Menautkan scroll behavior ke TopAppBar
                 onRefreshClick = {
                     viewModel.getJh() // Memuat ulang data jenis hewan ketika tombol refresh diklik
