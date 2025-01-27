@@ -21,7 +21,7 @@ class UpdatePsnViewModel(
 
     val id_hewan: String = checkNotNull(savedStateHandle[DestinasiUpdatePsn.ID_HEWAN])
 
-    var PsnuiState = mutableStateOf(InsertPsnUiState())
+    var psnuiState = mutableStateOf(InsertPsnUiState())
         private set
     var jhlist by mutableStateOf<List<JenisHewan>>(listOf())
         private set
@@ -36,7 +36,7 @@ class UpdatePsnViewModel(
             try {
                 val pasien = psn.getPasienById(id_hewan)
                 pasien?.let {
-                    PsnuiState.value = it.toInsertPsnUIEvent()
+                    psnuiState.value = it.toInsertPsnUIEvent()
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -65,8 +65,8 @@ class UpdatePsnViewModel(
     }
 
     fun updatePsnState(insertPsnUiEvent: InsertPsnUiEvent) {
-        val currentState = PsnuiState.value
-        PsnuiState.value = currentState.copy(insertPsnUiEvent = insertPsnUiEvent)
+        val currentState = psnuiState.value
+        psnuiState.value = currentState.copy(insertPsnUiEvent = insertPsnUiEvent)
     }
 }
 

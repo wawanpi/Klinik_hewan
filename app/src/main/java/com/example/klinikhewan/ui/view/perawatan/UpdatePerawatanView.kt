@@ -14,8 +14,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.klinikhewan.ui.viewmodel.PenyediaViewModel
-import com.example.klinikhewan.ui.viewmodel.perawatan.InsertPrnUiEvent
-import com.example.klinikhewan.ui.viewmodel.perawatan.InsertPrnUiState
+
 import com.example.klinikhewan.ui.viewmodel.perawatan.UpdatePrnViewModel
 import com.example.klinikhewan.ui.viewmodel.perawatan.toPrn
 import com.example.pertemuan12.ui.costumwidget.CostumeTopAppBar
@@ -23,7 +22,7 @@ import com.example.pertemuan12.ui.navigation.DestinasiNavigasi
 import kotlinx.coroutines.launch
 
 object DestinasiUpdatePrn : DestinasiNavigasi {
-    override val route = "update"
+    override val route = "update perawatan"
     const val ID_PERWATAN = "id_perawatan"
     val routesWithArg = "$route/{$ID_PERWATAN}"
     override val titleRes = "Update Pasien"
@@ -63,9 +62,9 @@ fun UpdatePrnView(
         ) {
             EntryBodyPrn(
                 insertPrnUiState = prnuiState,
-                psnList = psnList, // Kirim daftar pasien ke EntryBodyPrn
-                dtrList = dtrList, // Kirim daftar dokter ke EntryBodyPrn
-                onPasienValueChange = { updatedValue ->
+                pasienList = psnList, // Kirim daftar pasien ke EntryBodyPrn
+                dokterList = dtrList, // Kirim daftar dokter ke EntryBodyPrn
+                onPerawatanValueChange = { updatedValue ->
                     viewModel.updatePrnState(updatedValue)
                 },
                 onSaveClick = {
@@ -84,70 +83,3 @@ fun UpdatePrnView(
     }
 }
 
-@Composable
-fun EntryBodyPrn(
-    insertPrnUiState: InsertPrnUiState,
-    psnList: List<Pasien>,
-    dtrList: List<com.example.klinikhewan.model.Dokter>,
-    onPasienValueChange: (InsertPrnUiEvent) -> Unit,
-    onSaveClick: () -> Unit
-) {
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
-        // Dropdown untuk memilih pasien
-        DropdownInput(
-            label = "Pilih Pasien",
-            items = psnList.map { it.id_hewan },
-            selectedItem = insertPrnUiState.insertPrnUiEvent.id_hewan,
-            onItemSelected = { onPasienValueChange(insertPrnUiState.insertPrnUiEvent.copy(id_hewan = it)) }
-        )
-
-        // Dropdown untuk memilih dokter
-        DropdownInput(
-            label = "Pilih Dokter",
-            items = dtrList.map { it.id_dokter },
-            selectedItem = insertPrnUiState.insertPrnUiEvent.id_dokter,
-            onItemSelected = { onPasienValueChange(insertPrnUiState.insertPrnUiEvent.copy(id_dokter = it)) }
-        )
-
-        // Tombol simpan
-        androidx.compose.material3.Button(
-            onClick = onSaveClick,
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            androidx.compose.material3.Text(text = "Simpan")
-        }
-    }
-}
-
-@Composable
-fun DropdownInput(
-    label: String,
-    items: List<String>,
-    selectedItem: String,
-    onItemSelected: (String) -> Unit
-) {
-    val expanded = androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-
-    Column {
-        androidx.compose.material3.Text(text = label, modifier = Modifier.padding(bottom = 8.dp))
-        androidx.compose.material3.Button(onClick = { expanded.value = true }) {
-            androidx.compose.material3.Text(text = selectedItem.ifEmpty { "Pilih" })
-        }
-        androidx.compose.material3.DropdownMenu(
-            expanded = expanded.value,
-            onDismissRequest = { expanded.value = false }
-        ) {
-            items.forEach { item ->
-                androidx.compose.material3.DropdownMenuItem(
-                    onClick = {
-                        onItemSelected(item)
-                        expanded.value = false
-                    },
-                    text = { androidx.compose.material3.Text(text = item) }
-                )
-            }
-        }
-    }
-}
