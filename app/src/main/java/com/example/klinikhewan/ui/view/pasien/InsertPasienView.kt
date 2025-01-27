@@ -1,24 +1,25 @@
 package com.example.klinikhewan.ui.view.pasien
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import android.app.DatePickerDialog
+import android.widget.DatePicker
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.klinikhewan.model.JenisHewan
 import com.example.klinikhewan.ui.viewmodel.PenyediaViewModel
 import com.example.klinikhewan.ui.viewmodel.pasien.InsertPsnUiEvent
 import com.example.klinikhewan.ui.viewmodel.pasien.InsertPsnUiState
@@ -26,16 +27,13 @@ import com.example.klinikhewan.ui.viewmodel.pasien.InsertPsnViewModel
 import com.example.pertemuan12.ui.costumwidget.CostumeTopAppBar
 import com.example.pertemuan12.ui.navigation.DestinasiNavigasi
 import kotlinx.coroutines.launch
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.example.klinikhewan.model.JenisHewan
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 // Navigasi tujuan buat layar ini
 object DestinasiEntryPsn : DestinasiNavigasi {
-    override val route = "item_entry" // Rute navigasi ke layar ini
+    override val route = "item_entry pasien" // Rute navigasi ke layar ini
     override val titleRes = "Entry Pasien" // Judul di TopAppBar
 }
 
@@ -94,8 +92,8 @@ fun EntryBodyPsn(
     modifier: Modifier = Modifier
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(18.dp),
-        modifier = modifier.padding(12.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = modifier.padding(16.dp)
     ) {
         FormInputPsn(
             insertPsnUiEvent = insertPsnUiState.insertPsnUiEvent,
@@ -106,10 +104,12 @@ fun EntryBodyPsn(
 
         Button(
             onClick = onSaveClick,
-            shape = MaterialTheme.shapes.small,
-            modifier = Modifier.fillMaxWidth()
+            shape = MaterialTheme.shapes.medium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
         ) {
-            Text(text = "Simpan")
+            Text(text = "Simpan", style = MaterialTheme.typography.bodyLarge.copy(color = Color.White))
         }
     }
 }
@@ -122,6 +122,31 @@ fun FormInputPsn(
     jenisHewanList: List<JenisHewan>, // Jenis hewan untuk dropdown
     enabled: Boolean = true
 ) {
+    val context = LocalContext.current
+    val calendar = Calendar.getInstance()
+    val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val openDatePicker = remember { mutableStateOf(false) }
+    val dateState = remember { mutableStateOf(insertPsnUiEvent.tanggal_lahir) }
+
+    if (openDatePicker.value) {
+        val datePickerDialog = DatePickerDialog(
+            context,
+            { _: DatePicker, year: Int, monthOfYear: Int, dayOfMonth: Int ->
+                calendar.set(year, monthOfYear, dayOfMonth)
+                val selectedDate = dateFormatter.format(calendar.time)
+                onValueChange(insertPsnUiEvent.copy(tanggal_lahir = selectedDate))
+                dateState.value = selectedDate
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        LaunchedEffect(openDatePicker.value) {
+            datePickerDialog.show()
+            openDatePicker.value = false
+        }
+    }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -138,30 +163,24 @@ fun FormInputPsn(
         OutlinedTextField(
             value = insertPsnUiEvent.id_hewan,
             onValueChange = { onValueChange(insertPsnUiEvent.copy(id_hewan = it)) },
-            label = { Text("Masukan Id Hewan") },
+            label = { Text("ID Hewan") },
             modifier = Modifier.fillMaxWidth(),
             enabled = enabled,
             singleLine = true
         )
 
-        // Dropdown untuk Jenis Hewan
-        val expanded = remember { mutableStateOf(false) } // Untuk kontrol dropdown
-        val selectedIdJenisHewan = jenisHewanList.find { it.id_jenis_hewan == insertPsnUiEvent.id_jenis_hewan }?.id_jenis_hewan ?: "ID Jenis Hewan"
+        val expanded = remember { mutableStateOf(false) }
+        val selectedIdJenisHewan = jenisHewanList.find { it.id_jenis_hewan == insertPsnUiEvent.id_jenis_hewan }?.id_jenis_hewan ?: "Pilih Jenis Hewan"
 
         Column {
-            Text(
-
-                text = "Pilih Id Jenis Hewan",
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Button(
+            Text(text = "ID Jenis Hewan", style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(bottom = 4.dp))
+            OutlinedButton(
                 onClick = { expanded.value = true },
+                shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = selectedIdJenisHewan)
+                Text(text = selectedIdJenisHewan, color = Color.Black)
             }
-
             DropdownMenu(
                 expanded = expanded.value,
                 onDismissRequest = { expanded.value = false },
@@ -178,6 +197,22 @@ fun FormInputPsn(
                 }
             }
         }
+
+        OutlinedTextField(
+            value = dateState.value,
+            onValueChange = { },
+            label = { Text("Tanggal Lahir") },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
+            singleLine = true,
+            readOnly = true,
+            trailingIcon = {
+                Text(
+                    text = "📅",
+                    modifier = Modifier.clickable { openDatePicker.value = true }
+                )
+            }
+        )
 
         OutlinedTextField(
             value = insertPsnUiEvent.pemilik,
@@ -198,26 +233,11 @@ fun FormInputPsn(
         )
 
         OutlinedTextField(
-            value = insertPsnUiEvent.tanggal_lahir,
-            onValueChange = { onValueChange(insertPsnUiEvent.copy(tanggal_lahir = it)) },
-            label = { Text("Tanggal Lahir") },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
-
-        OutlinedTextField(
             value = insertPsnUiEvent.catatan_kesehatan,
             onValueChange = { onValueChange(insertPsnUiEvent.copy(catatan_kesehatan = it)) },
             label = { Text("Catatan Kesehatan") },
             modifier = Modifier.fillMaxWidth(),
-            enabled = enabled,
-            singleLine = true
-        )
-
-        Divider(
-            thickness = 8.dp,
-            modifier = Modifier.padding(12.dp)
+            enabled = enabled
         )
     }
 }
