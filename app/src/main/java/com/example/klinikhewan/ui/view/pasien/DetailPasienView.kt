@@ -2,6 +2,8 @@ package com.example.klinikhewan.ui.view.pasien
 
 
 import Pasien
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,14 +34,18 @@ import com.example.klinikhewan.ui.viewmodel.pasien.DetailPsnViewModel
 import com.example.klinikhewan.ui.viewmodel.pasien.DetailPsnUiState
 import com.example.pertemuan12.ui.costumwidget.CostumeTopAppBar
 import com.example.pertemuan12.ui.navigation.DestinasiNavigasi
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 object DestinasiPsnDetailPsn : DestinasiNavigasi {
-    override val route = "detail" // base route
+    override val route = "detail Pasien" // base route
     const val ID_HEWAN = "id_hewan" // Nama parameter untuk nim
     val routesWithArg = "$route/{$ID_HEWAN}" // Route yang menerima nim sebagai argumen
     override val titleRes = "Detail Pasien" // Title untuk halaman ini
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailPsnView(
@@ -81,6 +87,7 @@ fun DetailPsnView(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BodyDetailPsn(
     modifier: Modifier = Modifier,
@@ -118,7 +125,7 @@ fun BodyDetailPsn(
     }
 
 }
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ItemDetailPsn(
     pasien: Pasien
@@ -141,12 +148,22 @@ fun ItemDetailPsn(
             Spacer(modifier = Modifier.padding(4.dp))
             ComponentDetailPsn(judul = "Kontak Pemilik", isinya = pasien.kontak_pemilik)
             Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailPsn(judul = "Tanggal Lahir ", isinya = pasien.tanggal_lahir)
+
+            // Format tanggal lahir menjadi lokal
+            val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale("id", "ID"))
+            val formattedTanggalLahir = try {
+                LocalDate.parse(pasien.tanggal_lahir).format(formatter)
+            } catch (e: Exception) {
+                pasien.tanggal_lahir // Jika parsing gagal, tampilkan string asli
+            }
+            ComponentDetailPsn(judul = "Tanggal Lahir", isinya = formattedTanggalLahir)
+
             Spacer(modifier = Modifier.padding(4.dp))
-            ComponentDetailPsn(judul = "Catatan Keshatan", isinya = pasien.catatan_kesehatan)
+            ComponentDetailPsn(judul = "Catatan Kesehatan", isinya = pasien.catatan_kesehatan)
         }
     }
 }
+
 
 @Composable
 fun ComponentDetailPsn(

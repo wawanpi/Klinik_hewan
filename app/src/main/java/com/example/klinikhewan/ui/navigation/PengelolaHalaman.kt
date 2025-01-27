@@ -1,5 +1,7 @@
 package com.example.klinikhewan.ui.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -39,6 +41,7 @@ import com.example.klinikhewan.ui.view.perawatan.EntryPrnScreen
 import com.example.klinikhewan.ui.view.perawatan.HomePrnScreen
 import com.example.klinikhewan.ui.view.perawatan.UpdatePrnView
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PengelolaHalaman(
     modifier: Modifier = Modifier,
@@ -110,6 +113,11 @@ fun PengelolaHalaman(
         composable(DestinasiHomeDtr.route) {
             HomeDtrScreen(
                 navigateToItemEntry = { navController.navigate(DestinasiEntryDtr.route) },
+                navigateBack = {
+                    navController.navigate(DestinasiHomePsn.route) {
+                        popUpTo(DestinasiHomePsn.route) { inclusive = true }
+                    }
+                },
                 onDetailClick = { id_dokter ->
                     navController.navigate("${DestinasiDtrDetailDtr.route}/$id_dokter") {
                         popUpTo(DestinasiHomeDtr.route) { inclusive = true }
@@ -162,6 +170,7 @@ fun PengelolaHalaman(
         composable(DestinasiHomeJh.route) {
             HomeJhScreen(
                 navigateToItemEntry = { navController.navigate(DestinasiEntryJh.route) },
+                navigateBack = {navController.navigate(DestinasiHomePsn.route) },
                 onDetailClick = { id_jenis_hewan ->
                     navController.navigate("${DestinasiJhDetailJh.route}/$id_jenis_hewan") {
                         popUpTo(DestinasiHomeJh.route) { inclusive = true }
@@ -214,6 +223,11 @@ fun PengelolaHalaman(
         composable(DestinasiHomePrn.route) {
             HomePrnScreen(
                 navigateToItemEntry = { navController.navigate(DestinasiEntryPrn.route) },
+                navigateBack = {
+                    navController.navigate(DestinasiHomePsn.route) {
+                        popUpTo(DestinasiHomePsn.route) { inclusive = true }
+                    }
+                },
                 onDetailClick = { id_perawatan ->
                     navController.navigate("${DestinasiPrnDetailPrn.route}/$id_perawatan") {
                         popUpTo(DestinasiHomePrn.route) { inclusive = true }
