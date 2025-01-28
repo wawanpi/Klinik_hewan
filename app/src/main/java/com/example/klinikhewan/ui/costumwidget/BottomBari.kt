@@ -1,5 +1,6 @@
 package com.example.klinikhewan.ui.costumwidget
 
+import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
@@ -36,28 +37,28 @@ fun BottomBar(
             modifier = Modifier.fillMaxWidth()
         ) {
             // Ikon untuk navigasi ke HomePelanggan
-            Icon(
+            Image(
                 painter = painterResource(id = R.drawable.dokter), // Ganti dengan ikon Anda
                 contentDescription = "Home Dokter",
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(50.dp)
                     .clickable { onHomeDokterClick() }
             )
 
             // Ikon untuk navigasi ke HomeReservasi
-            Icon(
+            Image(
                 painter = painterResource(id = R.drawable.jenishewan), // Ganti dengan ikon Anda
                 contentDescription = "Home jenis hewan",
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(50.dp)
                     .clickable { onHomeJenisHewanClick() }
             )
 
-            Icon(
+            Image(
                 painter = painterResource(id = R.drawable.perawatan), // Ganti dengan ikon Anda
                 contentDescription = "Home Perawatan ",
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(50.dp)
                     .clickable { onHomePerawatanClick() }
             )
             }
